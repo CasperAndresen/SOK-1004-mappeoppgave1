@@ -1,0 +1,52 @@
+---
+
+title: “SOK-1004, høst 2022, Mappeoppgave 1”
+
+author: “19, 219, ”
+
+format: pdf
+
+echo: true
+
+output: true
+
+editor: visual
+---
+
+# **Oppgave 1. Årsaker og konsekvenser av ulikhet**
+
+## **Oppgave 1a**
+
+Hva mener man med inntektsulikheter i et land? Det forteller oss forskjellen eller «ulikheten» mellom hva de forskjellige innbyggerne i et land tjener i løpet av en periode som oftest blir målt i løpet av ett år. 
+
+
+# **Oppgave 3. Inntektsulikhet i Norge 2008-2019**
+
+Sletter minne, laster inn tidyverse. Laster så inn datasetter under navnet `oecd_n.`
+
+```{r}
+rm(list=ls())
+library(tidyverse)
+
+url <- "https://raw.githubusercontent.com/uit-sok-1004-h22/uit-sok-1004-h22.github.io/main/data/oecd_data_nor.csv"
+
+oecd_n <- url %>% 
+  read_csv()
+```
+
+## **Oppgave 3a**
+
+```{r}
+oecd_n %>% # data
+  filter(MEASURE ==c("GINI", "GINIB", "GINIG")) %>% # velg ut de observasjonene vi vil ha
+  ggplot(aes(x = Year, y=Value, color=MEASURE))+ # definer aksene
+  geom_point()+ # plott som punkt
+  scale_x_continuous(breaks=c(2008, 2010, 2012, 2014, 2016, 2018))+ # unngår at årstall blir gjort om til desimal
+  labs (title = " Inntektsulikhet for Norge, 2008-2019", subtitle = "Gini-koeffisienten...bla bla bla", y = "Antall", x= "År")+ # tittel på figuren og benevning av aksene
+  facet_wrap(~ factor (AGE, (levels=c("TOT", "WA", "OLD"))), # lag tre paneler etter alder i fornuftig rekkefølge med passende titler 
+                       labeller = as_labeller(
+                         c("TOT" = "Alle", 
+                           "WA" = "Arbeidere", 
+                           "OLD" = "Pensjonert")))+ # tilpass tittel på panelene
+  theme(legend.position = "bottom") # flytt legende for at størrelsen på plottene blir bra
+```
